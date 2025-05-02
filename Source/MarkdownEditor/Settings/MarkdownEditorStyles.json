@@ -1,0 +1,23 @@
+{
+	"HtmlSectionFormatting":
+	[
+		"<style id=\"section-styles\" type=\"text/css\">",
+		"section",
+		"{",
+		" padding: 8px;",
+		" margin-top: 6px;",
+		" margin-bottom: 6px;",
+		" border: 1px solid #7f7f7f;",
+		" border-radius: 16px;",
+		"}",
+		"section:nth-child(odd)",
+		"{",
+		" background-color: #fafaff;",
+		"}",
+		"section:nth-child(even)",
+		"{",
+		" background-color: #f0f0f7;",
+		"}",
+		"</style>"
+	]
+}

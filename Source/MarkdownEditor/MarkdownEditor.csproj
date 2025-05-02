@@ -1,0 +1,110 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>disable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Title>Markdown Editor</Title>
+    <Version>25.2502.4103</Version>
+    <Description>Dan's Markdown Editor desktop application for Windows.</Description>
+    <Copyright>Copyright(c) 2025. Daniel Patterson, MCSD (danielanywhere)</Copyright>
+    <PackageProjectUrl>https://github.com/danielanywhere/MarkdownEditor</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags>markdown;editor</PackageTags>
+    <Authors>Daniel Patterson, MCSD (danielanywhere)</Authors>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+    <ApplicationIcon>MarkdownEditor.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Components\_Archive2024052901\**" />
+    <EmbeddedResource Remove="Components\_Archive2024052901\**" />
+    <None Remove="Components\_Archive2024052901\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Binaries\Xceed.Document.NET5.dll" />
+    <None Remove="Binaries\Xceed.Words.NET5.dll" />
+    <None Remove="Components\default.css" />
+    <None Remove="Components\Index.html" />
+    <None Remove="Components\jquery-3.4.1.min.js" />
+    <None Remove="Components\markdowneditor.js" />
+    <None Remove="Components\marked.min.js" />
+    <None Remove="Components\simplemde.min.css" />
+    <None Remove="Components\simplemde.min.js" />
+    <None Remove="Settings\MarkdownEditorStyles.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Binaries\Xceed.Document.NET5.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Binaries\Xceed.Words.NET5.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Components\default.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Components\Index.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Components\jquery-3.4.1.min.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Components\markdowneditor.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Components\marked.min.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Components\simplemde.min.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Components\simplemde.min.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MarkdownEditor.ico" />
+    <Content Include="Settings\MarkdownEditorStyles.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Markdig" Version="0.37.0" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2584-prerelease" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="System.IO.Packaging" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Active\Html\Html\Html.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Xceed.Document.NET5">
+      <HintPath>Binaries\Xceed.Document.NET5.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Words.NET5">
+      <HintPath>Binaries\Xceed.Words.NET5.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="ResourceMain.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ResourceMain.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="ResourceMain.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ResourceMain.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>
