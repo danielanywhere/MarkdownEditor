@@ -73,7 +73,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Dans.Html.Library" Version="25.2504.3941" />
+    <PackageReference Include="Dans.Html.Library" Version="25.2515.4053" />
     <PackageReference Include="Markdig" Version="0.37.0" />
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2584-prerelease" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
