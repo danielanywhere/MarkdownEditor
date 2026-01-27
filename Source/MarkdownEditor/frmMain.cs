@@ -1,5 +1,5 @@
 /*
- * Copyright (c). 2024 - 2025 Daniel Patterson, MCSD (danielanywhere).
+ * Copyright (c). 2024 - 2026 Daniel Patterson, MCSD (danielanywhere).
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,9 +40,6 @@ using System.Windows.Forms;
 using Xceed.Words.NET;
 
 using static MarkdownEditor.MarkdownEditorUtil;
-
-//	TODO: Adding project, import, and export features.
-//	TODO: HTML Library must be open-sourced.
 
 namespace MarkdownEditor
 {
@@ -2079,8 +2076,54 @@ namespace MarkdownEditor
 		/// <param name="e">
 		/// Standard event arguments.
 		/// </param>
-		private void mnuFileExportHtml_Click(object sender, EventArgs e)
+		private async void mnuFileExportHtml_Click(object sender, EventArgs e)
 		{
+			string content = await GetWebViewMarkdown();
+			SaveFileDialog dialog = new SaveFileDialog();
+			string filename = "";
+			MarkdownPipeline pipeline = null;
+
+			if(content?.Length > 0)
+			{
+				dialog = new SaveFileDialog();
+				pipeline =
+					new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
+				content = Markdown.ToHtml(content, pipeline);
+				content = content.Replace("%7B", "{").Replace("%7D", "}");
+				if(content.Length > 0)
+				{
+					dialog.AddExtension = true;
+					dialog.AutoUpgradeEnabled = true;
+					dialog.CheckFileExists = false;
+					dialog.CheckPathExists = true;
+					dialog.CreatePrompt = false;
+					dialog.DefaultExt = ".md";
+					dialog.DereferenceLinks = true;
+					dialog.Filter =
+						"Html Files " +
+						"(*.html;*.htm)|" +
+						"*.html;.htm;|" +
+						"Text Files " +
+						"(*.txt)|" +
+						"*.txt;|" +
+						"All Files (*.*)|*.*";
+					dialog.FilterIndex = 0;
+					dialog.OverwritePrompt = true;
+					dialog.SupportMultiDottedExtensions = true;
+					dialog.Title = "Save HTML File As";
+					dialog.ValidateNames = true;
+					if(dialog.ShowDialog() == DialogResult.OK)
+					{
+						filename = dialog.FileName;
+						if(filename?.Length > 0)
+						{
+							File.WriteAllText(filename, content);
+							filename = Path.GetFileName(filename);
+							SetStatusMessage($"File saved: {filename}...");
+						}
+					}
+				}
+			}
 		}
 		//*-----------------------------------------------------------------------*
 

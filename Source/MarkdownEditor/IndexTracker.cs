@@ -1,5 +1,5 @@
 /*
- * Copyright (c). 2024 - 2025 Daniel Patterson, MCSD (danielanywhere).
+ * Copyright (c). 2024 - 2026 Daniel Patterson, MCSD (danielanywhere).
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
