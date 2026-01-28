@@ -2079,49 +2079,85 @@ namespace MarkdownEditor
 		private async void mnuFileExportHtml_Click(object sender, EventArgs e)
 		{
 			string content = await GetWebViewMarkdown();
-			SaveFileDialog dialog = new SaveFileDialog();
 			string filename = "";
 			MarkdownPipeline pipeline = null;
 
+			//	BUG: Strange issue going on here between file dialogs and WebView2.
+			//	Whenever SaveFileDialog (and sometimes OpenFileDialog) is being
+			//	used around WebView2, the thread context seems to get corrupted.
+			//	In the case below, wrapping up the access into an invoked action
+			//	does help to a certain extent, but is far from flawless.
+			//	When not running the access within an explicit invoked action,
+			//	the application crashes silently almost immediately, whereas,
+			//	with the additional protection, if you save your file quickly,
+			//	you can somehow escape the wrath. However, even in this case,
+			//	if you happen to leave the dialog open for more than about 10
+			//	seconds, the application will crash.
+			//	The severety of this bug is extreme and indicates that WebView2,
+			//	in its current state (v144.0.3719.93 2026-01-25), should not be
+			//	used in WinForms under any circumstance.
+			//	Because of the limited availability of alternative renderers,
+			//	it may be necessary at this moment to plan complete
+			//	cross-platform migration of this application before continuing
+			//	the any other further effort in the WinForms model.
+			//	If attempting to try to push this further while still in
+			//	WinForms, it might be suitable to consider a simple
+			//	HTML "renderer" rather than a full-featured "browser".
+			//	In fact, Markdig, the library used to process this markdown,
+			//	does have a renderer control available.
+			//	Additionally, there is HtmlRenderer.WinForms. There is also
+			//	the possibility of using GeckoFX in so-called "render-to-bitmap"
+			//	mode, where a static image representation of the HTML is
+			//	displayed on the output. The latter of these might be nearly
+			//	useless without double-buffering, however, because the output
+			//	needs to be updated as typing takes place.
+			//	When switching to a renderer vs. a browser, however, keep in
+			//	mind that we would lose the source-side reference formatting.
 			if(content?.Length > 0)
 			{
-				dialog = new SaveFileDialog();
 				pipeline =
 					new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
+				content = content.Replace("{", "%7B").Replace("}", "%7D");
 				content = Markdown.ToHtml(content, pipeline);
 				content = content.Replace("%7B", "{").Replace("%7D", "}");
 				if(content.Length > 0)
 				{
-					dialog.AddExtension = true;
-					dialog.AutoUpgradeEnabled = true;
-					dialog.CheckFileExists = false;
-					dialog.CheckPathExists = true;
-					dialog.CreatePrompt = false;
-					dialog.DefaultExt = ".md";
-					dialog.DereferenceLinks = true;
-					dialog.Filter =
-						"Html Files " +
-						"(*.html;*.htm)|" +
-						"*.html;.htm;|" +
-						"Text Files " +
-						"(*.txt)|" +
-						"*.txt;|" +
-						"All Files (*.*)|*.*";
-					dialog.FilterIndex = 0;
-					dialog.OverwritePrompt = true;
-					dialog.SupportMultiDottedExtensions = true;
-					dialog.Title = "Save HTML File As";
-					dialog.ValidateNames = true;
-					if(dialog.ShowDialog() == DialogResult.OK)
+					this.Invoke(new Action(() =>
 					{
-						filename = dialog.FileName;
-						if(filename?.Length > 0)
+						using(SaveFileDialog dialog = new SaveFileDialog())
 						{
-							File.WriteAllText(filename, content);
-							filename = Path.GetFileName(filename);
-							SetStatusMessage($"File saved: {filename}...");
+							dialog.AddExtension = true;
+							dialog.AutoUpgradeEnabled = true;
+							dialog.CheckFileExists = false;
+							dialog.CheckPathExists = true;
+							dialog.CreatePrompt = false;
+							dialog.DefaultExt = ".md";
+							dialog.DereferenceLinks = true;
+							dialog.Filter =
+								"Html Files " +
+								"(*.html;*.htm)|" +
+								"*.html;.htm;|" +
+								"Text Files " +
+								"(*.txt)|" +
+								"*.txt;|" +
+								"All Files (*.*)|*.*";
+							dialog.FilterIndex = 0;
+							dialog.OverwritePrompt = true;
+							dialog.SupportMultiDottedExtensions = true;
+							dialog.Title = "Save HTML File As";
+							dialog.ValidateNames = true;
+							if(dialog.ShowDialog() == DialogResult.OK)
+							{
+								filename = dialog.FileName;
+								if(filename?.Length > 0)
+								{
+									File.WriteAllText(filename, content);
+									filename = Path.GetFileName(filename);
+									SetStatusMessage($"File saved: {filename}...");
+								}
+							}
 						}
-					}
+					}));
 				}
 			}
 		}
